@@ -36,6 +36,8 @@ def get_user_record(user_id):
 
 
 def set_user_record(user_id, user_record):
+  if not os.path.isdir("users"):
+    os.mkdir("users")
   user_file = USER_FILE.format(user_id=user_id)
   with open(user_file, "w") as f:
     json.dump(user_record, f, ensure_ascii=False, indent=2)
