@@ -118,8 +118,6 @@ def get_random_choices(q_id):
   choices = []
   while len(choices) < 3:
     rq_id = random.choice(list(questions_by_level[level].keys()))
-    print(rq_id)
-    print(questions[rq_id])
     choice = questions[rq_id][q_type]
     if choice not in choices:
       choices.append(choice)
@@ -138,6 +136,7 @@ def form_quiz(q_id):
   random.shuffle(c)
   quiz["choices"] = c
   quiz["answer"] = c.index(answer)
+  quiz["question_id"] = q_id
   return quiz
 
 
