@@ -44,6 +44,17 @@ def set_user_record(user_id, user_record):
 
 @app.put("/record/{user_id}/{question_id}/{correct}")
 def record(user_id, question_id, correct):
+  """
+  Record the user's result--whether correct or not.
+
+  Args:
+  - user_id: the user's ID
+  - question_id: the ID of the question
+  - correct: whether the user got the answer correct
+
+  Returns:
+  - status: 200 if the recording was successful
+  """
   if correct not in ["true", "false"]:
     raise HTTPException(
         status_code=400,
@@ -60,23 +71,6 @@ def record(user_id, question_id, correct):
   })
   set_user_record(user_id, user_record)
   return {"status": "OK"}
-
-
-# @app.get("/report/{user}/{level}")
-# def report(user, level):
-#   """
-#   Returns a report of the outcomes of a user's tests.
-#   """
-#   user_file = f"users/{user}.json"
-#   if not os.path.isfile(user_file):
-#     return {"status": "user not found"}
-#   with open(user_file, "r") as f:
-#     data = json.load(f)
-#     f.close()
-#   report = {}
-#   for row in data[level]:
-#     report[row] = grade_datapoint(data[level][row])
-#   return report
 
 
 def grade_datapoint(datapoint):
@@ -126,9 +120,16 @@ def get_random_choices(q_id):
 
 def form_quiz(q_id):
   q = questions[q_id]
-  STATEMENT = "What is the {q_type} for the following expression?"
+  # STATEMENT = "What is the {q_type} for the following expression?"
+  STATEMENT = "表現の{q_type}は何ですか？"
+  READING_TR = "読み方"
+  MEANING_TR = "意味"
+  TR = {
+    "reading": READING_TR,
+    "meaning": MEANING_TR
+  }
   quiz = {
-      "statement": STATEMENT.format(q_type=q["q_type"]),
+      "statement": STATEMENT.format(q_type=TR[q["q_type"]]),
       "expr": q["expression"],
   }
   answer = q[q["q_type"]]
@@ -149,7 +150,18 @@ def needs_repetition(record):
 
 
 @app.get("/next/{user_id}/{level}")
-def next(user_id, level, count=5):
+def next(user_id, level):
+  """
+  Get the next set of questions to be taken for the given user and level.
+
+  Args:
+  - user_id: id of the user
+  - level: level of the quiz
+
+  Returns:
+  - quiz: array of mutliple choice questions
+  """
+  count = 1
   global questions
   global questions_by_level
   record = get_user_record(user_id)
