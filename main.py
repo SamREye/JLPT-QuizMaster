@@ -45,23 +45,11 @@ def set_user_record(user_id, user_record):
     f.close()
 
 
-@app.put("/record-correct/{user_id}/{question_id}")
-def record_correct(user_id, question_id):
+@app.get("/record/{user_id}/{question_id}/{correct}")
+def record_correct(user_id, question_id, correct):
   """
   Record the user's correct result.
   """
-  return record(user_id, question_id, True)
-
-
-@app.put("/record-incorrect/{user_id}/{question_id}")
-def record_incorrect(user_id, question_id):
-  """
-  Record the user's incorrect result.
-  """
-  return record(user_id, question_id, False)
-
-
-def record(user_id, question_id, correct):
   if question_id not in questions:
     raise HTTPException(status_code=404, detail="invalid question id")
   user_record = get_user_record(user_id)
@@ -70,7 +58,7 @@ def record(user_id, question_id, correct):
   timestamp = int(datetime.datetime.now().timestamp())
   user_record[question_id].append({
       "timestamp": timestamp,
-      "correct": bool(correct == "true")
+      "correct": bool(correct.lower() == "true")
   })
   set_user_record(user_id, user_record)
   return {"status": "OK"}
