@@ -10,10 +10,11 @@ import mymodel
 app = FastAPI()
 
 LEVELS = ["N1", "N2", "N3", "N4", "N5"]
-questions = {}
-with open("questions.json") as f:
-  questions = json.load(f)
+questions_arr = []
+with open("questions_clean.json") as f:
+  questions_arr = json.load(f)
   f.close()
+questions = {x['id']: x for x in questions_arr}
 questions_by_level = {}
 for level in LEVELS:
   questions_by_level[level] = {
