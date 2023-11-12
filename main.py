@@ -42,7 +42,7 @@ def set_user_record(user_id, user_record):
     f.close()
 
 
-@app.put("/record/{user_id}/{question_id}/{correct}")
+@app.get("/record/{user_id}/{question_id}/{correct}")
 def record(user_id, question_id, correct):
   """
   Record the user's result--whether correct or not.
@@ -124,10 +124,7 @@ def form_quiz(q_id):
   STATEMENT = "表現の{q_type}は何ですか？"
   READING_TR = "読み方"
   MEANING_TR = "意味"
-  TR = {
-    "reading": READING_TR,
-    "meaning": MEANING_TR
-  }
+  TR = {"reading": READING_TR, "meaning": MEANING_TR}
   quiz = {
       "statement": STATEMENT.format(q_type=TR[q["q_type"]]),
       "expr": q["expression"],
