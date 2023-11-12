@@ -45,31 +45,17 @@ def set_user_record(user_id, user_record):
 
 
 @app.put("/record-correct/{user_id}/{question_id}")
-def record_incorrect(user_id, question_id):
+def record_correct(user_id, question_id):
   """
-  Record the user's incorrect result.
-
-  Args:
-  - user_id: the user's ID
-  - question_id: the ID of the question
-
-  Returns:
-  - status: 200 if the recording was successful
+  Record the user's correct result.
   """
   return record(user_id, question_id, True)
 
 
 @app.put("/record-incorrect/{user_id}/{question_id}")
-def record_correct(user_id, question_id):
+def record_incorrect(user_id, question_id):
   """
   Record the user's incorrect result.
-
-  Args:
-  - user_id: the user's ID
-  - question_id: the ID of the question
-
-  Returns:
-  - status: 200 if the recording was successful
   """
   return record(user_id, question_id, False)
 
