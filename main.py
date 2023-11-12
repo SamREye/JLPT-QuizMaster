@@ -44,23 +44,37 @@ def set_user_record(user_id, user_record):
     f.close()
 
 
-@app.get("/record/{user_id}/{question_id}/{correct}")
-def record(user_id, question_id, correct):
+@app.put("/record-correct/{user_id}/{question_id}")
+def record_incorrect(user_id, question_id):
   """
-  Record the user's result--whether correct or not.
+  Record the user's incorrect result.
 
   Args:
   - user_id: the user's ID
   - question_id: the ID of the question
-  - correct: whether the user got the answer correct
 
   Returns:
   - status: 200 if the recording was successful
   """
-  if correct not in ["true", "false"]:
-    raise HTTPException(
-        status_code=400,
-        detail="invalid correct value: must be either true or false")
+  return record(user_id, question_id, True)
+
+
+@app.put("/record-incorrect/{user_id}/{question_id}")
+def record_correct(user_id, question_id):
+  """
+  Record the user's incorrect result.
+
+  Args:
+  - user_id: the user's ID
+  - question_id: the ID of the question
+
+  Returns:
+  - status: 200 if the recording was successful
+  """
+  return record(user_id, question_id, False)
+
+
+def record(user_id, question_id, correct):
   if question_id not in questions:
     raise HTTPException(status_code=404, detail="invalid question id")
   user_record = get_user_record(user_id)
